@@ -2,6 +2,7 @@ package handler
 
 import (
 	"fmt"
+	"log"
 	"strings"
 
 	mqtt "github.com/eclipse/paho.mqtt.golang"
@@ -11,7 +12,6 @@ import (
 type Handler interface {
 	execute(message Message)
 	supports(message Message) bool
-	new(name string) Handler
 }
 
 // Message containing topic and payload
@@ -22,7 +22,9 @@ type Message struct {
 	Payload      []byte
 }
 
-var handlers = []Handler{WeatherMessageHandler.new("WeatherMessageHandler")}
+var handlers = []Handler{
+	new(WeatherMessageHandler),
+}
 
 func processMessage(message Message) {
 
@@ -38,12 +40,12 @@ func processMessage(message Message) {
 
 // DefaultPublishHandler Consume all message
 func DefaultPublishHandler(client mqtt.Client, msg mqtt.Message) {
-	fmt.Printf("Message received %d : %s from %s\n", msg.MessageID(), msg.Payload(), msg.Topic())
+	log.Printf("Message received %d : %s from %s\n", msg.MessageID(), msg.Payload(), msg.Topic())
 
 	topic := msg.Topic()
 	splittedTopic := strings.Split(topic, "/")
 	if len(splittedTopic) < 3 {
-		fmt.Printf("Cannot handle the message, topic invalid: %s \n", topic)
+		log.Printf("Cannot handle the message, topic invalid: %s \n", topic)
 		return
 	}
 
