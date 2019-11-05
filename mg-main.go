@@ -5,15 +5,16 @@ import (
 	"os"
 	"time"
 
-	handler "github.com/mg/microgardener/handler"
-
 	mqtt "github.com/eclipse/paho.mqtt.golang"
+	handler "github.com/mg/microgardener/handler"
 )
 
 func main() {
 	fmt.Println("Starting Micro Gardener stats")
 
-	opts := mqtt.NewClientOptions().AddBroker("tcp://mosquitto:1883").SetClientID("microgardener-stats")
+	uri := fmt.Sprintf("tcp://%s:%s@mosquitto:1883", os.Getenv("MQTT_USER"), os.Getenv("MQTT_PASSWORD"))
+
+	opts := mqtt.NewClientOptions().AddBroker(uri).SetClientID("microgardener-stats")
 	opts.SetKeepAlive(2 * time.Second)
 	opts.SetDefaultPublishHandler(handler.DefaultPublishHandler)
 	opts.SetPingTimeout(1 * time.Second)

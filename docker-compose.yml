@@ -5,9 +5,16 @@ services:
     image: eclipse-mosquitto:1.6
     ports:
       - 1883:1883
+    volumes:
+      - ./.passwd:/etc/mosquitto/.passwd
+      - ./docker/config/mosquitto.conf:/mosquitto/config/mosquitto.conf
 
   app:
     build:
       context: .
     volumes:
-      - .:/go/src/microgardener
+      - .:/go/src/github.com/mg/microgardener
+    env_file:
+      - .env
+    depends_on:
+      - "mosquitto"
