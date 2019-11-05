@@ -27,7 +27,6 @@ var handlers = []Handler{
 }
 
 func processMessage(message Message) {
-
 	for _, handler := range handlers {
 		if !handler.supports(message) {
 			fmt.Println("Not supported")

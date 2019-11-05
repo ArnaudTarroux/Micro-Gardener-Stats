@@ -1,7 +1,10 @@
 package handler
 
 import (
+	"fmt"
 	"log"
+
+	model "github.com/mg/microgardener/model"
 )
 
 type WeatherMessageHandler struct {
@@ -9,9 +12,13 @@ type WeatherMessageHandler struct {
 }
 
 func (h WeatherMessageHandler) supports(message Message) bool {
-	return true
+	return message.MessageType == "weather"
 }
 
 func (h WeatherMessageHandler) execute(message Message) {
 	log.Printf("Executing... ControllerID: %s | MessageType: %s\n", message.ControllerID, message.MessageType)
+
+	weather := model.NewWeather(message.Payload)
+
+	fmt.Println(weather.Temperature)
 }

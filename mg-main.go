@@ -2,22 +2,18 @@ package main
 
 import (
 	"fmt"
-	"net/http"
 	"os"
 	"time"
 
-	handler "./handler"
+	handler "github.com/mg/microgardener/handler"
 
 	mqtt "github.com/eclipse/paho.mqtt.golang"
-	"github.com/prometheus/client_golang/prometheus/promhttp"
 )
 
 func main() {
 	fmt.Println("Starting Micro Gardener stats")
 
-	http.Handle("/metrics", promhttp.Handler())
-
-	opts := mqtt.NewClientOptions().AddBroker("tcp://localhost:1883").SetClientID("microgardener-stats")
+	opts := mqtt.NewClientOptions().AddBroker("tcp://mosquitto:1883").SetClientID("microgardener-stats")
 	opts.SetKeepAlive(2 * time.Second)
 	opts.SetDefaultPublishHandler(handler.DefaultPublishHandler)
 	opts.SetPingTimeout(1 * time.Second)
@@ -32,6 +28,6 @@ func main() {
 	}
 
 	for true {
-
+		select {}
 	}
 }
