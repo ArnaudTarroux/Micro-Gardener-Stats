@@ -9,24 +9,23 @@ import (
 )
 
 // Handler
-type Handler interface {
-	execute(message Message)
-	supports(message Message) bool
+type handler interface {
+	execute(message message)
+	supports(message message) bool
 }
 
-// Message containing topic and payload
-type Message struct {
+type message struct {
 	Topic        string
 	ControllerID string
 	MessageType  string
 	Payload      []byte
 }
 
-var handlers = []Handler{
-	new(WeatherMessageHandler),
+var handlers = []handler{
+	new(weatherMessageHandler),
 }
 
-func processMessage(message Message) {
+func processMessage(message message) {
 	for _, handler := range handlers {
 		if !handler.supports(message) {
 			fmt.Println("Not supported")
@@ -48,6 +47,6 @@ func DefaultPublishHandler(client mqtt.Client, msg mqtt.Message) {
 		return
 	}
 
-	message := Message{Topic: topic, Payload: msg.Payload(), ControllerID: splittedTopic[1], MessageType: splittedTopic[2]}
+	message := message{Topic: topic, Payload: msg.Payload(), ControllerID: splittedTopic[1], MessageType: splittedTopic[2]}
 	processMessage(message)
 }

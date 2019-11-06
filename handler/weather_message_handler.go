@@ -7,15 +7,15 @@ import (
 	model "github.com/mg/microgardener/model"
 )
 
-type WeatherMessageHandler struct {
+type weatherMessageHandler struct {
 	name string
 }
 
-func (h WeatherMessageHandler) supports(message Message) bool {
+func (h weatherMessageHandler) supports(message message) bool {
 	return message.MessageType == "weather"
 }
 
-func (h WeatherMessageHandler) execute(message Message) {
+func (h weatherMessageHandler) execute(message message) {
 	log.Printf("Executing... ControllerID: %s | MessageType: %s\n", message.ControllerID, message.MessageType)
 
 	weather := model.NewWeather(message.Payload)
