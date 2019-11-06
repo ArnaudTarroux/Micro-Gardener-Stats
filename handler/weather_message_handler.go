@@ -18,7 +18,7 @@ func (h weatherMessageHandler) supports(message message) bool {
 func (h weatherMessageHandler) execute(message message) {
 	log.Printf("Executing... ControllerID: %s | MessageType: %s\n", message.ControllerID, message.MessageType)
 
-	weather := model.NewWeather(message.Payload)
+	weather := model.NewWeatherFromJson(message.Payload)
 
 	fmt.Println(weather.Temperature)
 }
