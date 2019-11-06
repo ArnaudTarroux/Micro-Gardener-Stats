@@ -8,13 +8,12 @@ import (
 )
 
 // Handler
-type Handler interface {
-	execute(message Message)
-	supports(message Message) bool
+type handler interface {
+	execute(message message)
+	supports(message message) bool
 }
 
-// Message containing topic and payload
-type Message struct {
+type message struct {
 	Topic        string
 	ControllerID string
 	MessageType  string
@@ -26,7 +25,7 @@ var handlers = []Handler{
 	new(FanMessageHandler),
 }
 
-func processMessage(message Message) {
+func processMessage(message message) {
 	for _, handler := range handlers {
 		if handler.supports(message) {
 			go handler.execute(message)
@@ -45,6 +44,6 @@ func DefaultPublishHandler(client mqtt.Client, msg mqtt.Message) {
 		return
 	}
 
-	message := Message{Topic: topic, Payload: msg.Payload(), ControllerID: splittedTopic[1], MessageType: splittedTopic[2]}
+	message := message{Topic: topic, Payload: msg.Payload(), ControllerID: splittedTopic[1], MessageType: splittedTopic[2]}
 	processMessage(message)
 }

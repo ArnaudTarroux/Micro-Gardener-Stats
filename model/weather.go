@@ -7,9 +7,9 @@ type Weather struct {
 	Humidity    float32 `json:"humidity"`
 }
 
-func NewWeather(rawData []byte) Weather {
+func NewWeather(rawData []byte) *Weather {
 	weather := new(Weather)
 	json.Unmarshal(rawData, &weather)
 
-	return *weather
+	return weather
 }
