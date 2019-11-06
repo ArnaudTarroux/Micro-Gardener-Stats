@@ -3,18 +3,42 @@ version: '2'
 services:
   mosquitto:
     image: eclipse-mosquitto:1.6
+    restart: always
     ports:
       - 1883:1883
     volumes:
       - ./.passwd:/etc/mosquitto/.passwd
       - ./docker/config/mosquitto.conf:/mosquitto/config/mosquitto.conf
+    networks:
+      - backend
+
+  db:
+    image: postgres:12-alpine
+    restart: always
+    volumes:
+      - ./docker/data/postgres:/var/lib/postgresql/data
+    env_file:
+      - .env
+    networks:
+      - db
 
   app:
     build:
       context: .
+    restart: always
     volumes:
       - .:/go/src/github.com/mg/microgardener
     env_file:
       - .env
     depends_on:
       - "mosquitto"
+      - "db"
+    networks:
+      - backend
+      - db
+      
+networks:
+  backend:
+    driver: bridge
+  db:
+    driver: bridge
