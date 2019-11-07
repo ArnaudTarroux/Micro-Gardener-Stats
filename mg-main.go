@@ -8,7 +8,7 @@ import (
 
 	mqtt "github.com/eclipse/paho.mqtt.golang"
 	handler "github.com/mg/microgardener/handler"
-	persistence "github.com/mg/microgardener/persistence"
+	migration "github.com/mg/microgardener/persistence/migration"
 )
 
 const (
@@ -25,7 +25,7 @@ func main() {
 	flag.Parse()
 
 	if command == migrate {
-		persistence.MigrateDb(version)
+		migration.MigrateDb(version)
 		return
 	}
 
