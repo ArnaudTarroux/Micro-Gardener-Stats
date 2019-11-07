@@ -1,10 +1,13 @@
-package persistence
+package migration
 
 import (
+	"database/sql"
 	"fmt"
+
+	db "github.com/mg/microgardener/persistence"
 )
 
-var migrations = map[int]func(){
+var migrations = map[int]func(*sql.DB){
 	201911062209: migration201911062209,
 }
 
@@ -14,10 +17,12 @@ func MigrateDb(version int) {
 		panic("Please provide a migration version in command argument")
 	}
 
-	fmt.Println(version)
 	if nil == migrations[version] {
 		panic("The migration does not exist")
 	}
 
-	migrations[version]()
+	if fn := migrations[version]; fn != nil {
+		connection := db.Init()
+		fn(connection)
+	}
 }
