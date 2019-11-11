@@ -20,12 +20,14 @@ func (h weatherMessageHandler) supports(message message) bool {
 func (h weatherMessageHandler) execute(message message) {
 	log.Printf("Executing... ControllerID: %s | MessageType: %s\n", message.ControllerID, message.MessageType)
 
-	// weather := model.NewWeatherFromJson(message.Payload)
-
 	uuid, _ := uuid.NewUUID()
 	payload := string(message.Payload)
 	event := model.NewEvent(uuid.String(), message.ControllerID, message.MessageType, payload, time.Now())
 
-	repository := new(repositories.SqlEventRepository)
-	repository.Save(*event)
+	eventRepository := new(repositories.SqlEventRepository)
+	eventRepository.Save(*event)
+
+	weather := model.NewWeatherFromJson(message.Payload)
+	weatherRepository := new(repositories.SqlWeatherRepository)
+	weatherRepository.Save(*weather, message.ControllerID)
 }

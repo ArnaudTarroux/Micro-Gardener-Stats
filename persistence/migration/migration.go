@@ -9,6 +9,7 @@ import (
 
 var migrations = map[int]func(*sql.DB){
 	201911062209: migration201911062209,
+	201911091708: migration201911091708,
 }
 
 func MigrateDb(version int) {
