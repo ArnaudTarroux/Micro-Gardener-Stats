@@ -1,7 +1,6 @@
 package handler
 
 import (
-	"fmt"
 	"log"
 	"strings"
 
@@ -29,12 +28,9 @@ var handlers = []Handler{
 
 func processMessage(message Message) {
 	for _, handler := range handlers {
-		if !handler.supports(message) {
-			fmt.Println("Not supported")
-			return
+		if handler.supports(message) {
+			go handler.execute(message)
 		}
-
-		go handler.execute(message)
 	}
 }
 
