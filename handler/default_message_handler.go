@@ -24,6 +24,7 @@ type Message struct {
 
 var handlers = []Handler{
 	new(WeatherMessageHandler),
+	new(FanMessageHandler),
 }
 
 func processMessage(message Message) {
