@@ -7,6 +7,7 @@ import (
 	"time"
 
 	mqtt "github.com/eclipse/paho.mqtt.golang"
+	api "github.com/mg/microgardener/api"
 	handler "github.com/mg/microgardener/handler"
 	migration "github.com/mg/microgardener/persistence/migration"
 )
@@ -30,6 +31,8 @@ func main() {
 	}
 
 	fmt.Println("Starting Micro Gardener stats")
+
+	api.Init()
 
 	uri := fmt.Sprintf("tcp://%s:%s@mosquitto:1883", os.Getenv("MQTT_USER"), os.Getenv("MQTT_PASSWORD"))
 

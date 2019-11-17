@@ -11,11 +11,11 @@ type FanMessageHandler struct {
 	name string
 }
 
-func (h FanMessageHandler) supports(message Message) bool {
+func (h FanMessageHandler) supports(message message) bool {
 	return message.MessageType == "fan"
 }
 
-func (h FanMessageHandler) execute(message Message) {
+func (h FanMessageHandler) execute(message message) {
 	log.Printf("Executing... ControllerID: %s | MessageType: %s\n", message.ControllerID, message.MessageType)
 
 	fan := model.NewFan(message.Payload)

@@ -20,7 +20,7 @@ type message struct {
 	Payload      []byte
 }
 
-var handlers = []Handler{
+var handlers = []handler{
 	new(WeatherMessageHandler),
 	new(FanMessageHandler),
 }

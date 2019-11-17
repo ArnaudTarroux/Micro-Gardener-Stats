@@ -9,15 +9,15 @@ import (
 	repositories "github.com/mg/microgardener/persistence/repository"
 )
 
-type weatherMessageHandler struct {
+type WeatherMessageHandler struct {
 	name string
 }
 
-func (h weatherMessageHandler) supports(message message) bool {
+func (h WeatherMessageHandler) supports(message message) bool {
 	return message.MessageType == "weather"
 }
 
-func (h weatherMessageHandler) execute(message message) {
+func (h WeatherMessageHandler) execute(message message) {
 	log.Printf("Executing... ControllerID: %s | MessageType: %s\n", message.ControllerID, message.MessageType)
 
 	uuid, _ := uuid.NewUUID()
@@ -26,8 +26,4 @@ func (h weatherMessageHandler) execute(message message) {
 
 	eventRepository := new(repositories.SqlEventRepository)
 	eventRepository.Save(*event)
-
-	weather := model.NewWeatherFromJson(message.Payload)
-	weatherRepository := new(repositories.SqlWeatherRepository)
-	weatherRepository.Save(*weather, message.ControllerID)
 }
