@@ -38,7 +38,7 @@ func (e event) GetController() string {
 	return e.controller
 }
 
-func NewEvent(id string, controller string, eventType string, payload string, createdAt time.Time) *event {
+func NewEvent(id string, controller string, eventType string, payload string, createdAt time.Time) Event {
 	event := event{
 		id:         id,
 		controller: controller,
@@ -47,5 +47,5 @@ func NewEvent(id string, controller string, eventType string, payload string, cr
 		createdAt:  createdAt,
 	}
 
-	return &event
+	return event
 }

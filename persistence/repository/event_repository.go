@@ -1,8 +1,8 @@
 package repository
 
 import (
-	"fmt"
 	"log"
+	"time"
 
 	model "github.com/mg/microgardener/model"
 	persistence "github.com/mg/microgardener/persistence"
@@ -43,12 +43,12 @@ func (repository SqlEventRepository) Save(event model.Event) {
 	log.Printf("New event created %d", rowsAffected)
 }
 
-func (repository SqlEventRepository) GetLastEventByType(eventType string) {
+func (repository SqlEventRepository) GetLastEventByType(eventType string) model.Event {
 	db := persistence.Init()
 	defer db.Close()
 
 	sqlStmt := `
-		SELECT payload, created_at FROM public.events WHERE event_type = $1 ORDER BY created_at DESC LIMIT 1
+		SELECT * FROM public.events WHERE event_type = $1 ORDER BY created_at DESC LIMIT 1
 	`
 
 	rows, err := db.Query(sqlStmt, eventType)
@@ -56,13 +56,20 @@ func (repository SqlEventRepository) GetLastEventByType(eventType string) {
 		panic(err)
 	}
 
-	var payload string
-	var createdAt string
+	type event struct {
+		id         string
+		eventType  string
+		controller string
+		payload    string
+		createdAt  time.Time
+	}
 
 	rows.Next()
-	err = rows.Scan(&payload, &createdAt)
+	var e event
+	err = rows.Scan(e.id, e.eventType, e.controller, e.payload, e.createdAt)
 	if err != nil {
 		panic(err)
 	}
-	fmt.Println(payload, createdAt)
+
+	return model.NewEvent(e.id, e.controller, e.eventType, e.payload, e.createdAt)
 }

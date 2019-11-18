@@ -12,5 +12,6 @@ func Init() {
 	fmt.Println("API ready to handle connexion")
 
 	http.Handle("/api/weather", new(handler.WeatherApiHandler))
+
 	http.ListenAndServe(":8000", nil)
 }

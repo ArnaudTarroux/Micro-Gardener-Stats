@@ -25,5 +25,5 @@ func (h WeatherMessageHandler) execute(message message) {
 	event := model.NewEvent(uuid.String(), message.ControllerID, message.MessageType, payload, time.Now())
 
 	eventRepository := new(repositories.SqlEventRepository)
-	eventRepository.Save(*event)
+	eventRepository.Save(event)
 }

@@ -14,7 +14,7 @@ func (h WeatherApiHandler) ServeHTTP(w http.ResponseWriter, r *http.Request) {
 	w.Header().Add("Content-Type", "application/json")
 
 	eventRepository := new(repositories.SqlEventRepository)
-	eventRepository.GetLastEventByType("weather")
+	event := eventRepository.GetLastEventByType("weather")
 
-	fmt.Fprint(w, `{"temperature": 26.3, "humidity": 75}`)
+	fmt.Fprint(w, event)
 }
