@@ -66,7 +66,7 @@ func (repository SqlEventRepository) GetLastEventByType(eventType string) model.
 
 	rows.Next()
 	var e event
-	err = rows.Scan(e.id, e.eventType, e.controller, e.payload, e.createdAt)
+	err = rows.Scan(&e.id, &e.eventType, &e.controller, &e.payload, &e.createdAt)
 	if err != nil {
 		panic(err)
 	}

@@ -32,7 +32,7 @@ func main() {
 
 	fmt.Println("Starting Micro Gardener stats")
 
-	api.Init()
+	go api.Init()
 
 	uri := fmt.Sprintf("tcp://%s:%s@mosquitto:1883", os.Getenv("MQTT_USER"), os.Getenv("MQTT_PASSWORD"))
 
