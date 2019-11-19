@@ -2,16 +2,16 @@ package api
 
 import (
 	"fmt"
-	"net/http"
 
-	handler "github.com/mg/microgardener/api/handler"
+	"github.com/gin-gonic/gin"
+	"github.com/mg/microgardener/api/handler"
 )
 
 func Init() {
 	fmt.Println("API server started")
 	fmt.Println("API ready to handle connexion")
 
-	http.Handle("/api/weather", new(handler.WeatherApiHandler))
-
-	http.ListenAndServe(":8000", nil)
+	r := gin.Default()
+	r.GET("/api/weather", new(handler.WeatherApiHandler).Handle)
+	r.Run("0.0.0.0:8000")
 }

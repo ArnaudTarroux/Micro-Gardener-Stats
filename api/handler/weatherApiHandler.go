@@ -3,30 +3,25 @@ package handler
 import (
 	"encoding/json"
 	"fmt"
-	"net/http"
-	"time"
 
-	repositories "github.com/mg/microgardener/persistence/repository"
+	"github.com/gin-gonic/gin"
+	"github.com/mg/microgardener/persistence/repository"
 )
 
 type WeatherApiHandler struct{}
 
-type weatherReadModel struct {
-	temperature float32 `json:"temperature"`
-	humidity    float32 `json:"humidity"`
-	createdAt   time.Time
-}
-
-func (h WeatherApiHandler) ServeHTTP(w http.ResponseWriter, r *http.Request) {
+func (h WeatherApiHandler) Handle(c *gin.Context) {
 	fmt.Println("weather handler !!")
-	w.Header().Add("Content-Type", "application/json")
 
-	eventRepository := new(repositories.SqlEventRepository)
+	eventRepository := new(repository.SqlEventRepository)
 	event := eventRepository.GetLastEventByType("weather")
 
-	readModel := weatherReadModel{}
-	json.Unmarshal([]byte(event.GetPayload()), &readModel)
-	readModel.createdAt = event.GetCreatedAt()
+	var payload map[string]float32
+	_ = json.Unmarshal([]byte(event.GetPayload()), &payload)
 
-	fmt.Fprint(w, readModel)
+	c.JSON(200, gin.H{
+		"temperature": payload["temperature"],
+		"humidity":    payload["humidity"],
+		"created_at":  event.GetCreatedAt(),
+	})
 }
