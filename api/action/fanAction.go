@@ -10,8 +10,8 @@ import (
 type FanAction struct{}
 
 type FanActionBody struct {
-	day   float32 `json:"day" binding:"required"`
-	night float32 `json:"night" binding:"required"`
+	Day   float32 `json:"day" binding:"required"`
+	Night float32 `json:"night" binding:"required"`
 }
 
 func (a FanAction) Handle(c *gin.Context) {
@@ -22,7 +22,5 @@ func (a FanAction) Handle(c *gin.Context) {
 		c.JSON(http.StatusBadRequest, gin.H{"error": err.Error()})
 	}
 
-	fmt.Println(json)
-
-	c.JSON(http.StatusOK, gin.H{})
+	c.JSON(http.StatusOK, json)
 }

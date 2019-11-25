@@ -4,6 +4,7 @@ import (
 	"fmt"
 
 	"github.com/gin-gonic/gin"
+	"github.com/mg/microgardener/api/action"
 	"github.com/mg/microgardener/api/query"
 )
 

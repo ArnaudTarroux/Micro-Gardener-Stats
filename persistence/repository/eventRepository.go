@@ -13,8 +13,7 @@ type EventRepository interface {
 	GetLastEventByType(eventType string) model.Event
 }
 
-type SqlEventRepository struct {
-}
+type SqlEventRepository struct{}
 
 func (repository SqlEventRepository) Save(event model.Event) {
 	db := persistence.Init()
