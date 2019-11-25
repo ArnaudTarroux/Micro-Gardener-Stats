@@ -10,7 +10,7 @@ import (
 
 type EventRepository interface {
 	Save(model.Event)
-	GetLastEventByType(eventType string)
+	GetLastEventByType(eventType string) model.Event
 }
 
 type SqlEventRepository struct {
@@ -51,10 +51,7 @@ func (repository SqlEventRepository) GetLastEventByType(eventType string) model.
 		SELECT * FROM public.events WHERE event_type = $1 ORDER BY created_at DESC LIMIT 1
 	`
 
-	rows, err := db.Query(sqlStmt, eventType)
-	if err != nil {
-		panic(err)
-	}
+	rows := db.QueryRow(sqlStmt, eventType)
 
 	type event struct {
 		id         string
@@ -64,11 +61,11 @@ func (repository SqlEventRepository) GetLastEventByType(eventType string) model.
 		createdAt  time.Time
 	}
 
-	rows.Next()
 	var e event
-	err = rows.Scan(&e.id, &e.eventType, &e.controller, &e.payload, &e.createdAt)
+	err := rows.Scan(&e.id, &e.eventType, &e.controller, &e.payload, &e.createdAt)
 	if err != nil {
-		panic(err)
+		log.Print(err)
+		return nil
 	}
 
 	return model.NewEvent(e.id, e.controller, e.eventType, e.payload, e.createdAt)

@@ -4,7 +4,7 @@ import (
 	"fmt"
 
 	"github.com/gin-gonic/gin"
-	"github.com/mg/microgardener/api/handler"
+	"github.com/mg/microgardener/api/query"
 )
 
 func Init() {
@@ -12,6 +12,7 @@ func Init() {
 	fmt.Println("API ready to handle connexion")
 
 	r := gin.Default()
-	r.GET("/api/weather", new(handler.WeatherApiHandler).Handle)
+	r.GET("/api/weather", new(query.WeatherQuery).Handle)
+	r.POST("/api/fan", new(action.FanAction).Handle)
 	r.Run("0.0.0.0:8000")
 }
