@@ -3,7 +3,6 @@ package action
 import (
 	"encoding/json"
 	"fmt"
-	"log"
 	"net/http"
 
 	"github.com/gin-gonic/gin"
@@ -34,8 +33,6 @@ func (a FanAction) Handle(c *gin.Context) {
 	}
 
 	jsonString, _ := json.Marshal(payload)
-	log.Println(jsonString)
-
 	publisher.PublishTo("/mg/control", jsonString)
 
 	c.JSON(http.StatusNoContent, gin.H{})
