@@ -4,13 +4,13 @@ import (
 	"log"
 	"time"
 
-	model "github.com/mg/microgardener/model"
+	"github.com/mg/microgardener/model"
 	persistence "github.com/mg/microgardener/persistence"
 )
 
 type EventRepository interface {
 	Save(model.Event)
-	GetLastEventByType(eventType string) model.Event
+	GetLastEventByType(controller string, eventType string) model.Event
 }
 
 type SqlEventRepository struct{}
@@ -42,15 +42,15 @@ func (repository SqlEventRepository) Save(event model.Event) {
 	log.Printf("New event created %d", rowsAffected)
 }
 
-func (repository SqlEventRepository) GetLastEventByType(eventType string) model.Event {
+func (repository SqlEventRepository) GetLastEventByType(controller string, eventType string) model.Event {
 	db := persistence.Init()
 	defer db.Close()
 
 	sqlStmt := `
-		SELECT * FROM public.events WHERE event_type = $1 ORDER BY created_at DESC LIMIT 1
+		SELECT * FROM public.events WHERE event_type = $1 AND controller = $2 ORDER BY created_at DESC LIMIT 1
 	`
 
-	rows := db.QueryRow(sqlStmt, eventType)
+	rows := db.QueryRow(sqlStmt, eventType, controller)
 
 	type event struct {
 		id         string

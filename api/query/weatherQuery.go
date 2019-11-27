@@ -1,7 +1,6 @@
 package query
 
 import (
-	"encoding/json"
 	"fmt"
 	"net/http"
 
@@ -14,18 +13,11 @@ type WeatherQuery struct{}
 func (h WeatherQuery) Handle(c *gin.Context) {
 	fmt.Println("weather query !!")
 
-	eventRepository := new(repository.SqlEventRepository)
-	event := eventRepository.GetLastEventByType("weather")
-	if nil == event {
+	weatherRepository := new(repository.SqlWeatherRepository)
+	err, weather := weatherRepository.GetByController("stats")
+	if err != nil {
 		c.JSON(http.StatusNotFound, gin.H{})
 	}
 
-	var payload map[string]float32
-	_ = json.Unmarshal([]byte(event.GetPayload()), &payload)
-
-	c.JSON(http.StatusOK, gin.H{
-		"temperature": payload["temperature"],
-		"humidity":    payload["humidity"],
-		"created_at":  event.GetCreatedAt(),
-	})
+	c.JSON(http.StatusOK, weather)
 }

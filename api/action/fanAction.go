@@ -1,10 +1,13 @@
 package action
 
 import (
+	"encoding/json"
 	"fmt"
+	"log"
 	"net/http"
 
 	"github.com/gin-gonic/gin"
+	"github.com/mg/microgardener/publisher"
 )
 
 type FanAction struct{}
@@ -17,10 +20,23 @@ type FanActionBody struct {
 func (a FanAction) Handle(c *gin.Context) {
 	fmt.Println("fan action !!")
 
-	var json FanActionBody
-	if err := c.ShouldBindJSON(&json); err != nil {
+	var bodyJson FanActionBody
+	if err := c.ShouldBindJSON(&bodyJson); err != nil {
 		c.JSON(http.StatusBadRequest, gin.H{"error": err.Error()})
 	}
 
-	c.JSON(http.StatusOK, json)
+	payload := map[string]interface{}{
+		"action": 10004,
+		"value": map[string]float32{
+			"day":   bodyJson.Day,
+			"night": bodyJson.Night,
+		},
+	}
+
+	jsonString, _ := json.Marshal(payload)
+	log.Println(jsonString)
+
+	publisher.PublishTo("/mg/control", jsonString)
+
+	c.JSON(http.StatusNoContent, gin.H{})
 }
